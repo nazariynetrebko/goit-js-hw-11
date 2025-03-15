@@ -4,6 +4,7 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 let lightbox;
 
 export function showLoader(loader) {
+  loader.style.display = 'block';
   loader.classList.remove(`hidden`);
 }
 

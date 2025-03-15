@@ -10,9 +10,17 @@
 }
 
 .loader.hidden {
-  opacity: 0;
-  visibility: hidden;
-  animation-play-state: paused;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+
+  white-space: nowrap;
+  clip-path: inset(100%);
+  clip: rect(0 0 0 0);
+  overflow: hidden;
 }
 
 .loader:before {
@@ -30,12 +38,12 @@
     left: 0;
     transform: translateX(-100%) rotate(0deg);
     border-radius: 0;
-    background: #fff;
+    background: #000000;
   }
   100% {
     left: 100%;
     transform: translateX(0%) rotate(360deg);
     border-radius: 50%;
-    background: #fff;
+    background: #000000;
   }
 }
