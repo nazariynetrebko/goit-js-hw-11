@@ -3,19 +3,6 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 
 let lightbox;
 
-export function showLoader(loader) {
-  loader.style.display = 'block';
-  loader.classList.remove(`hidden`);
-}
-
-export function hideLoader(loader) {
-  loader.classList.add(`hidden`);
-}
-
-export function clearGallery(gallery) {
-  gallery.innerHTML = ` `;
-}
-
 export function renderGallery(images, gallery) {
   const markup = images.map(createImageCard).join(``);
   gallery.insertAdjacentHTML(`beforeend`, markup);
