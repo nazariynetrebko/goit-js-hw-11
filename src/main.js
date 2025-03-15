@@ -1,33 +1,56 @@
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
 import { fetchImages } from './js/pixabay-api.js';
-import {
-  showLoader,
-  hideLoader,
-  clearGallery,
-  renderGallery,
-} from './js/render-functions.js';
+import { renderGallery } from './js/render-functions';
 
-const refs = {
-  form: document.querySelector('.form'),
-  loader: document.querySelector('.loader'),
-  gallery: document.querySelector('.gallery'),
-};
+const form = document.querySelector('.form');
+const gallery = document.querySelector('.gallery');
+const loader = document.querySelector('.loader');
 
-refs.form.addEventListener('submit', handleSubmit);
+window.addEventListener('load', () => {
+  loader.style.display = 'none';
+});
 
-function handleSubmit(e) {
-  e.preventDefault();
-  const searchQuery = e.target.elements['search-text'].value.trim();
+form.addEventListener('submit', event => {
+  event.preventDefault();
+  const inputField = event.target.elements['search-text'];
+  const query = inputField.value.trim();
 
-  if (!searchQuery) return;
+  if (!query) {
+    iziToast.warning({
+      title: 'Попередження',
+      message: 'Введіть пошуковий запит!',
+      position: 'topRight',
+    });
+    return;
+  }
 
-  console.log(refs.loader);
-  showLoader(refs.loader);
-  clearGallery(refs.gallery);
+  gallery.innerHTML = '';
+  loader.style.display = 'block';
 
-  fetchImages(searchQuery)
-    .then(images => renderGallery(images, refs.gallery))
-    .catch(error => console.error(error))
-    .finally(() => setTimeout(() => hideLoader(refs.loader), 1000));
-
-  e.target.reset();
-}
+  setTimeout(() => {
+    fetchImages(query)
+      .then(images => {
+        if (images.length === 0) {
+          iziToast.error({
+            title: 'Error',
+            message: 'No images found',
+            position: 'topRight',
+          });
+          return;
+        }
+        renderGallery(images, gallery);
+      })
+      .catch(error => {
+        iziToast.error({
+          title: 'Error',
+          message: 'Failed to fetch images',
+          position: 'topRight',
+        });
+      })
+      .finally(() => {
+        inputField.value = '';
+        loader.style.display = 'none';
+      });
+  }, 700);
+});

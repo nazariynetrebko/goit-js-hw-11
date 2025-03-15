@@ -1,6 +1,4 @@
 import axios from 'axios';
-import iziToast from 'izitoast';
-import 'izitoast/dist/css/iziToast.min.css';
 
 const API_KEY = '49351008-1bfee9cf32a9c846c40651839';
 const BASE_URL = 'https://pixabay.com/api/';
@@ -18,23 +16,12 @@ export function fetchImages(query) {
   return axios
     .get(BASE_URL, { params })
     .then(response => {
-      console.log('API Response:', response.data);
       if (!response.data.hits.length) {
-        showError('Sorry, there are no images matching your search query.');
-        return [];
+        return Promise.reject(new Error('No images found'));
       }
       return response.data.hits;
     })
     .catch(error => {
-      showError('Failed to fetch images. Please try again later.');
-      return [];
+      return Promise.reject(error);
     });
-}
-
-function showError(message) {
-  iziToast.error({
-    title: 'Error',
-    message: message,
-    position: 'topRight',
-  });
 }
